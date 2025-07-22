@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Handover/Takeover OTP Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #0052cc;
+      --success: #28a745;
+      --danger: #dc3545;
+      --bg: #f9f9f9;
+      --card: #fff;
+      --text: #333;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: var(--card);
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #003c99;
+    }
+    .divider {
+      margin: 30px 0;
+      text-align: center;
+      color: #999;
+      position: relative;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      display: inline-block;
+      height: 1px;
+      width: 40%;
+      background: #ccc;
+      vertical-align: middle;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🛡️ Handover/Takeover Form</h2>
+
+    <!-- Step 1: Send OTP -->
+    <form method="POST" action="https://anaxx.app.n8n.cloud/webhook-test/handover-submit" id="form-send">
+      <label for="site">📍 Site Name</label>
+      <input type="text" id="site" name="site" placeholder="e.g. Jeevan Lifestyle" required>
+
+      <label for="guard_name">👮‍♂️ Handover Guard Name</label>
+      <input type="text" id="guard_name" name="guard_name" placeholder="e.g. Ramesh S." required>
+
+      <label for="mobile">📱 Mobile Number</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="10-digit mobile number" required>
+
+      <button type="submit" name="action" value="send_otp">📩 Send OTP</button>
+    </form>
+
+    <div class="divider">Step 2</div>
+
+    <!-- Step 2: Verify OTP -->
+    <form method="POST" action="https://anaxx.app.n8n.cloud/webhook-test/handover-submit" id="form-verify">
+      <label for="otp">🔢 Enter OTP</label>
+      <input type="text" id="otp" name="otp" placeholder="Enter received OTP" required>
+
+      <label for="takeover_guard">👮‍♂️ Takeover Guard Name</label>
+      <input type="text" id="takeover_guard" name="takeover_guard" placeholder="e.g. Suresh P." required>
+
+      <label for="remarks">📝 Remarks (Optional)</label>
+      <textarea id="remarks" name="remarks" rows="3" placeholder="Any important handover notes..."></textarea>
+
+      <!-- Hidden fields for previous data -->
+      <input type="hidden" name="mobile" id="mobile_hidden">
+      <input type="hidden" name="site" id="site_hidden">
+      <input type="hidden" name="guard_name" id="guard_hidden">
+
+      <button type="submit" name="action" value="verify_otp">✅ Verify OTP & Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const sendForm = document.getElementById("form-send");
+    const verifyForm = document.getElementById("form-verify");
+
+    sendForm.addEventListener("submit", function () {
+      localStorage.setItem("mobile", sendForm.mobile.value);
+      localStorage.setItem("site", sendForm.site.value);
+      localStorage.setItem("guard_name", sendForm.guard_name.value);
+    });
+
+    window.onload = function () {
+      document.getElementById("mobile_hidden").value = localStorage.getItem("mobile") || "";
+      document.getElementById("site_hidden").value = localStorage.getItem("site") || "";
+      document.getElementById("guard_hidden").value = localStorage.getItem("guard_name") || "";
+    };
+  </script>
+
+</body>
+</html>
